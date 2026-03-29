@@ -25,16 +25,42 @@ export function useTossBanner() {
 
   useEffect(() => {
     if (isInitialized) return;
-    if (!safeIsSupported(TossAds.initialize.isSupported)) return;
 
-    TossAds.initialize({
-      callbacks: {
-        onInitialized: () => setIsInitialized(true),
-        onInitializationFailed: (error: any) => {
-          console.error('배너 광고 SDK 초기화 실패:', error);
+    let cancelled = false;
+
+    const tryInit = () => {
+      if (cancelled || isInitialized) return;
+      if (!safeIsSupported(TossAds.initialize.isSupported)) return false;
+
+      TossAds.initialize({
+        callbacks: {
+          onInitialized: () => { if (!cancelled) setIsInitialized(true); },
+          onInitializationFailed: (error: any) => {
+            console.error('배너 광고 SDK 초기화 실패:', error);
+          },
         },
-      },
-    });
+      });
+      return true;
+    };
+
+    if (!tryInit()) {
+      // SDK가 아직 준비 안 됐을 경우 최대 5초 재시도
+      const interval = setInterval(() => {
+        if (tryInit()) clearInterval(interval);
+      }, 200);
+      const timer = setTimeout(() => {
+        clearInterval(interval);
+        console.warn('[BannerAd] TossAds.initialize not supported after timeout');
+      }, 5000);
+
+      return () => {
+        cancelled = true;
+        clearInterval(interval);
+        clearTimeout(timer);
+      };
+    }
+
+    return () => { cancelled = true; };
   }, [isInitialized]);
 
   const attachBanner = useCallback(
@@ -149,7 +175,7 @@ export function useRewardedAd(adGroupId = AD_IDS.rewarded) {
       const giveUpTimer = setTimeout(() => {
         clearInterval(retryInterval);
         console.warn('[RewardedAd] loadFullScreenAd not supported after timeout');
-      }, 3000);
+      }, 5000);
 
       return () => {
         cancelled = true;

@@ -1,0 +1,12 @@
+
+.granite
+cert_key/
+node_modules/
+.env
+.env.web
+dist/
+*.tsbuildinfo
+supabase/.temp/
+.bkit/
+.claude/
+docs/.pdca-snapshots/

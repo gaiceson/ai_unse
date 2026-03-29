@@ -1,0 +1,32 @@
+{
+  "name": "fortunelab",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "granite dev",
+    "build": "ait build",
+    "build:web": "vite build --base=./ --mode web && copy public\\.htaccess dist\\.htaccess",
+    "preview": "vite preview",
+    "granite:dev": "npx granite dev",
+    "granite:build": "npx ait build",
+    "deploy": "ait deploy"
+  },
+  "dependencies": {
+    "@apps-in-toss/web-framework": "^2.0.5",
+    "@supabase/supabase-js": "^2.45.0",
+    "@toss/tds-mobile": "^2.2.1",
+    "lunar-javascript": "^1.7.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "pg": "^8.20.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  }
+}

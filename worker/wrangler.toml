@@ -1,0 +1,25 @@
+name = "fortunelab"
+main = "index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Set secrets via `wrangler secret put`:
+#   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put H2YgCDl1swGn6FUE6iiikx8j9+523WjZIZEbm4guwfw=     # base64 인코딩된 AES-256 키 (Toss에서 이메일로 제공)
+#   wrangler secret put TOSS      # AAD 값 (Toss에서 이메일로 제공)
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "baf5cd018af74e3c980ed395f00c8c3a"
+
+# ── Toss mTLS 인증서 설정 ─────────────────────────────────────────────────────
+# 1. 먼저 인증서를 Cloudflare에 업로드:
+#    wrangler mtls-certificate upload \
+#      --cert ../cert_key/fortunelab_auth_public.crt \
+#      --key  ../cert_key/fortunelab_auth_private.key \
+#      --name fortunelab-toss-mtls
+#
+# 2. 출력된 certificate_id를 아래에 입력:
+[[mtls_certificates]]
+binding = "TOSS_MTLS"
+certificate_id = "40d887fb-fdae-4bd2-a5a0-93ec065d8737"
